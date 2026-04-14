@@ -1,6 +1,6 @@
 # Comparative gem5 Study of In-Order and Out-of-Order CPU Models
 
-This repository contains a coursework project for **High Performance Computing Systems** focused on a comparative simulation study between **`MinorCPU`** (in-order) and **`O3CPU`** (out-of-order) using **gem5**.
+This repository contains a coursework project for my **High Performance Computing Systems** university course focused on a comparative simulation study between **`MinorCPU`** (in-order) and **`O3CPU`** (out-of-order) using **gem5**.
 
 The project evaluates how the processor model affects performance for two contrasting workloads:
 
@@ -8,6 +8,14 @@ The project evaluates how the processor model affects performance for two contra
 - **Pointer chasing** as a memory-bound benchmark
 
 The repository includes the benchmark source code, gem5 configuration scripts, experiment automation, result extraction utilities, and the final LaTeX report.
+
+## Motivation
+
+Matrix multiplication is a core building block in numerical computing and modern AI systems. Fully connected neural network layers are ultimately expressed through matrix operations, which makes matrix-heavy workloads a useful proxy for studying how a microarchitecture behaves on practical compute-intensive tasks.
+
+<p align="center">
+  <img src="report/figures/MLP.png" alt="Multilayer perceptron structure" width="620">
+</p>
 
 ## Project Goals
 
@@ -146,6 +154,10 @@ The final experiment summary is stored in `results/summary.csv`. The key observa
 - For **pointer chasing**, `O3CPU` still performs better, but the gain is much smaller at about **1.42x IPC**.
 - This matches the expected behavior: out-of-order execution is most effective when the workload exposes enough ILP and is less effective when execution is dominated by memory latency.
 
+<p align="center">
+  <img src="report/figures/ipc.png" alt="IPC comparison between MinorCPU and O3CPU" width="720">
+</p>
+
 Summary table:
 
 | Workload | CPU | Sim Insts | Cycles | IPC | CPI | L1D Miss Rate | L2 Miss Rate |
@@ -171,4 +183,3 @@ The final report includes:
 
 - gem5 documentation: https://www.gem5.org/documentation/
 - Hennessy & Patterson, *Computer Architecture: A Quantitative Approach*
-
