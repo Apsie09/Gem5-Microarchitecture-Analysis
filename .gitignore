@@ -1,0 +1,37 @@
+# External dependency
+gem5/
+
+# Python
+__pycache__/
+*.pyc
+
+# Benchmarks
+benchmarks/bin/
+
+# Generated experiment outputs
+results/*
+!results/summary.csv
+
+# Generated report assets outside the final report source
+results/report_assets/
+
+# LaTeX auxiliary files
+report/*.aux
+report/*.log
+report/*.out
+report/*.toc
+report/*.synctex.gz
+
+# LaTeX build directory: keep only the final PDF
+report/build/*
+!report/build/main.pdf
+
+# Local notes and helper markdown files
+SETUP_AND_RUN_GUIDE.md
+report/README.md
+report/report_summary.md
+results/report_assets/report_table.md
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
