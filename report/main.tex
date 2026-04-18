@@ -54,7 +54,8 @@
     columns=fullflexible,
     keepspaces=true,
     xleftmargin=1em,
-    framexleftmargin=1em
+    framexleftmargin=1em,
+    captionpos=b
 }
 
 \begin{document}
@@ -71,7 +72,7 @@
     \begin{minipage}{0.8\textwidth}
         \raggedright
         \large
-        \textbf{ТЕХНИЧЕСКИ УНИВЕРСИТЕТ -- СОФИЯ}\\[-0.3ex]
+\textbf{ТЕХНИЧЕСКИ УНИВЕРСИТЕТ, СОФИЯ}\\[-0.3ex]
         \rule{\linewidth}{0.2pt}\\[-0.6ex]
         \textbf{ФАКУЛТЕТ КОМПЮТЪРНИ СИСТЕМИ И ТЕХНОЛОГИИ}\\[0.2cm]
     \end{minipage}
@@ -124,7 +125,7 @@
 Настоящата курсова работа изследва чрез симулации в \texttt{gem5} поведението на две архитектури: \texttt{MinorCPU}, който реализира in-order изпълнение, и \texttt{O3CPU}, който реализира out-of-order изпълнение. Целта е да се анализира как архитектурният модел влияе върху IPC, CPI, общия брой цикли и кеш поведението при два типа натоварване: матрично умножение и pointer chasing.
 
 \section{Цел на проекта}
-Основната цел е да се извърши сравнителен анализ между in-order и out-of-order процесорна архитектура при еднакви системни условия. За да бъде сравнението коректно, и двете конфигурации използват една и съща ISA платформа --- \texttt{X86}, еднаква честота от \texttt{3 GHz}, една и съща кеш йерархия с частни \texttt{L1I 32 KiB}, \texttt{L1D 32 KiB} и частен \texttt{L2 512 KiB}, както и една и съща памет \texttt{SingleChannelDDR3\_1600}. Следователно единствената променлива в експеримента е типът процесорно ядро --- \texttt{MinorCPU} като in-order модел и \texttt{O3CPU} като out-of-order модел.
+Основната цел е да се извърши сравнителен анализ между in-order и out-of-order процесорна архитектура при еднакви системни условия. За да бъде сравнението коректно, и двете конфигурации използват една и съща ISA платформа, \texttt{X86}, еднаква честота от \texttt{3 GHz}, една и съща кеш йерархия с частни \texttt{L1I 32 KiB}, \texttt{L1D 32 KiB} и частен \texttt{L2 512 KiB}, както и една и съща памет \texttt{SingleChannelDDR3\_1600}. Следователно единствената променлива в експеримента е типът процесорно ядро, \texttt{MinorCPU} като in-order модел и \texttt{O3CPU} като out-of-order модел.
 
 \section{Теоретична основа}
 
@@ -204,7 +205,6 @@
 
 \begin{table}[H]
     \centering
-    \caption{Фиксирани параметри на експерименталната конфигурация}
     \small
     \setlength{\tabcolsep}{6pt}
     \begin{tabular}{l l}
@@ -224,6 +224,7 @@
         Натоварвания & \texttt{matrix\_multiply}, \texttt{pointer\_chase} \\
         \bottomrule
     \end{tabular}
+    \caption{Фиксирани параметри на експерименталната конфигурация}
 \end{table}
 
 \subsection{Използвани натоварвания}
@@ -276,14 +277,16 @@ for (uint64_t step = 0; step < (uint64_t)nodes * (uint64_t)steps_per_node;
 Сравнението между двата процесорни модела е конструирано така, че да изолира единствено ефекта от микроархитектурата. За всяка двойка експерименти натоварването, ISA платформата, кеш конфигурацията, паметната система и честотата са еднакви. Освен това броят симулирани инструкции е идентичен в рамките на всяка двойка: при матричното умножение и двата модела изпълняват \(29\,077\,226\) инструкции, а при pointer chasing и двата модела изпълняват \(12\,431\,387\) инструкции. Следователно разликите в IPC, CPI и общия брой цикли могат да бъдат интерпретирани като реален ефект от in-order спрямо out-of-order изпълнение, а не като следствие от различна програма или различна системна конфигурация.
 
 \section{Реализация}
-За проекта беше изградена автоматизирана експериментална рамка. Създадени бяха два локални benchmark-а на \texttt{C}, shell скрипт за компилация на бинарните файлове, конфигурационен Python скрипт за \texttt{gem5} и автоматизиран launcher за четирите експеримента: \texttt{matrix\_minor}, \texttt{matrix\_o3}, \texttt{pointer\_minor} и \texttt{pointer\_o3}. Резултатите бяха обобщени автоматично в \texttt{summary.csv}, а върху тях бяха генерирани таблици и графики за отчета. По този начин целият експериментален процес --- от компилацията до извличането на метриките --- беше възпроизводим и еднакъв за всички конфигурации.
+За проекта беше изградена автоматизирана експериментална рамка. Създадени бяха два локални benchmark-а на \texttt{C}, shell скрипт за компилация на бинарните файлове, конфигурационен Python скрипт за \texttt{gem5} и автоматизиран launcher за четирите експеримента: \texttt{matrix\_minor}, \texttt{matrix\_o3}, \texttt{pointer\_minor} и \texttt{pointer\_o3}. Резултатите бяха обобщени автоматично в \texttt{summary.csv}, а върху тях бяха генерирани таблици и графики за отчета. По този начин целият експериментален процес, от компилацията до извличането на метриките, беше възпроизводим и еднакъв за всички конфигурации.
+
+\subsection{Публично хранилище на проекта}
+Кодът на проекта е публикуван в GitHub хранилище \cite{projectrepo}: \url{https://github.com/Apsie09/Gem5-Microarchitecture-Analysis}. В него са включени benchmark програмите на \texttt{C}, конфигурационният код за \texttt{gem5}, shell и Python скриптовете за изпълнение на експериментите и извличане на статистиките, генерираните обобщени резултати, както и \LaTeX{} изходният код на настоящия отчет в директорията \texttt{report}. Това позволява експериментите и документацията да бъдат проследени, проверени и повторени независимо.
 
 \section{Резултати}
 
 \subsection{Основна сравнителна таблица}
 \begin{table}[H]
     \centering
-    \caption{Сравнение между \texttt{MinorCPU} и \texttt{O3CPU} при двата типа натоварване}
     \small
     \setlength{\tabcolsep}{5pt}
     \begin{tabular}{l l r r r r r r}
@@ -296,6 +299,7 @@ for (uint64_t step = 0; step < (uint64_t)nodes * (uint64_t)steps_per_node;
         Pointer & O3 & 12.43 & 112.25 & 0.111 & 9.030 & 0.372311 & 0.477100 \\
         \bottomrule
     \end{tabular}
+    \caption{Сравнение между \texttt{MinorCPU} и \texttt{O3CPU} при двата типа натоварване}
 \end{table}
 
 Таблицата показва ясно, че за матричното умножение \texttt{O3CPU} постига драстично по-висока ефективност от \texttt{MinorCPU}, докато при pointer chasing предимството остава, но е по-умерено. По този начин още на таблично ниво се вижда разликата между compute-bound и memory-bound поведение.
@@ -303,7 +307,6 @@ for (uint64_t step = 0; step < (uint64_t)nodes * (uint64_t)steps_per_node;
 \subsection{Производни показатели}
 \begin{table}[H]
     \centering
-    \caption{Обобщени производни показатели за \texttt{O3CPU} спрямо \texttt{MinorCPU}}
     \small
     \setlength{\tabcolsep}{6pt}
     \begin{tabular}{l r r r}
@@ -314,6 +317,7 @@ for (uint64_t step = 0; step < (uint64_t)nodes * (uint64_t)steps_per_node;
         Pointer & \(1.42\times\) & \(29.70\%\) & \(29.71\%\) \\
         \bottomrule
     \end{tabular}
+    \caption{Обобщени производни показатели за \texttt{O3CPU} спрямо \texttt{MinorCPU}}
 \end{table}
 
 Тази таблица концентрира основния резултат на проекта в кратка форма. При матричното умножение out-of-order моделът носи много голямо ускорение, докато при pointer chasing подобрението е осезаемо, но ограничено от зависимостите между адресациите и от по-високата чувствителност към латентността на паметта.
@@ -381,6 +385,7 @@ for (uint64_t step = 0; step < (uint64_t)nodes * (uint64_t)steps_per_node;
 
 Най-силно изразеният резултат е при матричното умножение, където \texttt{O3CPU} постига приблизително \(5.9\times\) по-висок IPC и около \(83\%\) по-малко цикли. При pointer chasing предимството остава, но е значително по-слабо: приблизително \(1.42\times\) по-висок IPC и около \(30\%\) по-малко цикли. Следователно основният извод е, че ефектът от out-of-order изпълнението зависи силно от характера на натоварването и е най-голям тогава, когато съществува достатъчен ILP и когато паметната латентност не е доминиращият ограничител.
 
+\addcontentsline{toc}{section}{Литература}
 \begin{thebibliography}{99}
 
 \bibitem{gem5}
@@ -413,6 +418,12 @@ L. Zhang, B. Wang, Y. Shen, Y. Nie.
 \newblock An online soft sensor method for biochemical reaction process based on JS-ISSA-XGBoost.
 \newblock \emph{BMC Biotechnology}, 23:49, 2023.
 \newblock Available at: \url{https://doi.org/10.1186/s12896-023-00816-3}
+
+\bibitem{projectrepo}
+A. Popov.
+\newblock Gem5 Microarchitecture Analysis.
+\newblock GitHub repository.
+\newblock Available at: \url{https://github.com/Apsie09/Gem5-Microarchitecture-Analysis}
 
 \end{thebibliography}
 
